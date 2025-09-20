@@ -7,16 +7,16 @@
 // Execute `rustlings hint structs3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 #[derive(Debug)]
 struct Package {
-    sender_country: String,
-    recipient_country: String,
-    weight_in_grams: i32,
+    sender_country: String,//发件人国家
+    recipient_country: String,//收件人国家
+    weight_in_grams: i32,//包裹重量
 }
 
-impl Package {
+impl Package {//定义方法  此方法建立在结构体Package之上                     -> 类型  代表函数返回值类型
     fn new(sender_country: String, recipient_country: String, weight_in_grams: i32) -> Package {
         if weight_in_grams <= 0 {
             panic!("Can not ship a weightless package.")
@@ -27,14 +27,16 @@ impl Package {
                 weight_in_grams,
             }
         }
+    }//相当于构造函数
+        //&代表引用  string赋值或者传入函数的时候会失去所有权  用&可以解决
+    fn is_international(&self) -> bool {
+        // Something goes here...
+        self.sender_country != self.recipient_country
     }
 
-    fn is_international(&self) -> ??? {
+    fn get_fees(&self, cents_per_gram: i32) -> i32 {
         // Something goes here...
-    }
-
-    fn get_fees(&self, cents_per_gram: i32) -> ??? {
-        // Something goes here...
+        self.weight_in_grams * cents_per_gram
     }
 }
 
