@@ -7,16 +7,16 @@
 // Execute `rustlings hint modules2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 mod delicious_snacks {
     // TODO: Fix these use statements
-    use self::fruits::PEAR as ???
-    use self::veggies::CUCUMBER as ???
+    pub use self::fruits::PEAR as fruit;//这里的  self  就是  delicious_snacks  本身
+    pub use self::veggies::CUCUMBER as veggie;
 
     mod fruits {
-        pub const PEAR: &'static str = "Pear";
-        pub const APPLE: &'static str = "Apple";
+        pub const PEAR: &'static str = "Pear";//声明一个公开的常量PEAR 类型是静态字符切片引用  值是Pear
+        pub const APPLE: &'static str = "Apple";//“静态”= 生命周期  'static ，保证这段字符串数据从程序生到死始终可用
     }
 
     mod veggies {

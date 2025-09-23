@@ -14,7 +14,7 @@
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 use std::collections::HashMap;
 
@@ -39,6 +39,36 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+
+        //or_insert  返回的 &mut V 指向的就是哈希表内部那块真实数据
+        //可变引用 可以代表真实数据 能够同步修改
+        let Team1=scores.entry(team_1_name).or_insert(
+            Team{
+                goals_scored:0,
+                goals_conceded:0,
+        });
+        Team1.goals_scored+=team_1_score;
+        Team1.goals_conceded+=team_2_score;
+
+        let Team2=scores.entry(team_2_name).or_insert(
+            Team{
+                goals_scored:0,
+                goals_conceded:0,
+        });
+        Team2.goals_scored+=team_2_score;
+        Team2.goals_conceded+=team_1_score;
+        
+
+        // let Team1= Team{
+        //     goals_scored:team_1_score,
+        //     goals_conceded:team_2_score,
+        // };
+        // let Team2=Team{
+        //     goals_scored:team_2_score,
+        //     goals_conceded:team_1_score,
+        // };
+        // scores.insert(team_1_name,Team1);
+        // scores.insert(team_2_name,Team2);
     }
     scores
 }

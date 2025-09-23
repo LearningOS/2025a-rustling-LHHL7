@@ -19,15 +19,21 @@
 // Execute `rustlings hint errors2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 use std::num::ParseIntError;
 
 pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
     let processing_fee = 1;
     let cost_per_item = 5;
-    let qty = item_quantity.parse::<i32>();
-
+    // parse()  是 Rust 标准库中把字符串转换成目标类型的通用函数  输入是&str 输出是Result
+    //parse解析 
+    //ParseIntError是标准库定义的结构体
+    let qty = match item_quantity.parse::<i32>(){
+        Ok(number)=>number,
+        Err(error)=>return Err(error)
+    };
+    
     Ok(qty * cost_per_item + processing_fee)
 }
 
@@ -43,7 +49,8 @@ mod tests {
     #[test]
     fn item_quantity_is_an_invalid_number() {
         assert_eq!(
-            total_cost("beep boop").unwrap_err().to_string(),
+            total_cost("beep boop").unwrap_err().to_string(),// unwrap强制取出result<i32,parseinterrror>的err变体
+            //  若结果是Err(e) ，就返回  e: ParseIntError
             "invalid digit found in string"
         );
     }

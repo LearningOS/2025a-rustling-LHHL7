@@ -8,10 +8,12 @@
 // Execute `rustlings hint traits3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
+//无法从相同方法的重载实现中调用默认方法 重载的话直接在impl块里面写 重载后不能用默认的
 pub trait Licensed {
-    fn licensing_info(&self) -> String;
+    fn licensing_info(&self) -> String{//默认实现
+        String::from("Some information")
+    }
 }
 
 struct SomeSoftware {

@@ -3,9 +3,11 @@
 // Execute `rustlings hint errors4` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
-#[derive(PartialEq, Debug)]
+
+#[derive(PartialEq, Debug)]// #[derive(PartialEq, Debug)]  是 Rust 中最常见的语法糖之一，
+// 它让编译器自动为你的类型生成  PartialEq  和  Debug  trait 的实现。
+//可以调试和比较 可以直接写p1=p2这种比较
 struct PositiveNonzeroInteger(u64);
 
 #[derive(PartialEq, Debug)]
@@ -17,7 +19,14 @@ enum CreationError {
 impl PositiveNonzeroInteger {
     fn new(value: i64) -> Result<PositiveNonzeroInteger, CreationError> {
         // Hmm...? Why is this only returning an Ok value?
-        Ok(PositiveNonzeroInteger(value as u64))
+        if value ==0 {
+            Err(CreationError::Zero)
+        }else if value <0 {
+            Err(CreationError::Negative)
+        }else {
+            Ok(PositiveNonzeroInteger(value as u64))
+        }
+        // Ok(PositiveNonzeroInteger(value as u64))
     }
 }
 

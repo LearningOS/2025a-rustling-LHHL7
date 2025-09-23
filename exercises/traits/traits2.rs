@@ -4,16 +4,22 @@
 // implement this trait, consider for a moment what it means to 'append "Bar"'
 // to a vector of strings.
 //
-// No boiler plate code this time, you can do this!
+// No boiler plate code this time, you can do this!//这次没有样板代码。
 //
 // Execute `rustlings hint traits2` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+
 
 trait AppendBar {
-    fn append_bar(self) -> Self;
+    fn append_bar(self) -> Self;//前面的self是实例 后面的Self是类型
 }
-
+impl AppendBar for Vec<String>{
+    fn append_bar(mut self)-> Self{//可以用可变 跟trait不完全一样
+        self.push(String::from("Bar"));//返回（）
+        self
+     
+    }
+}
 // TODO: Implement trait `AppendBar` for a vector of strings.
 
 #[cfg(test)]
