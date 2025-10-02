@@ -6,16 +6,19 @@
 // Execute `rustlings hint iterators2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 // Step 1.
 // Complete the `capitalize_first` function.
 // "hello" -> "Hello"
 pub fn capitalize_first(input: &str) -> String {
-    let mut c = input.chars();
+    let mut c = input.chars();// chars()  返回的是一个 迭代器 吐出每一个字符
     match c.next() {
         None => String::new(),
-        Some(first) => ???,
+        Some(first) => first.to_uppercase().chain(c).collect()
+        //单个字符调用to_uppercase()时 因为有些字符转大写后不止一个char 所以返回一个迭代器
+        //chain(c)  就是把两个迭代器串成一根“长”迭代器，
+        //collect将迭代器直接变成集合 目标类型必须由上下文推断；这里函数签名要求返回  String ，Rust 会 自动 选择  String
     }
 }
 
@@ -24,7 +27,12 @@ pub fn capitalize_first(input: &str) -> String {
 // Return a vector of strings.
 // ["hello", "world"] -> ["Hello", "World"]
 pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
-    vec![]
+    let mut v:Vec<String> =Vec::new();
+    let  w_iter=words.iter();
+    for x in w_iter {
+            v.push(capitalize_first(&x));
+    }
+    v
 }
 
 // Step 3.
@@ -32,7 +40,12 @@ pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
 // Return a single string.
 // ["hello", " ", "world"] -> "Hello World"
 pub fn capitalize_words_string(words: &[&str]) -> String {
-    String::new()
+    let mut res=String::new();
+    for x in words.iter(){
+        res.push_str(&capitalize_first(&x));
+    }
+    res
+
 }
 
 #[cfg(test)]

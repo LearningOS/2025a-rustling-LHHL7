@@ -27,7 +27,7 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
+
 
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
@@ -36,11 +36,30 @@ enum IntoColorError {
 // Note that the implementation for tuple and array will be checked at compile
 // time, but the slice implementation needs to check the slice length! Also note
 // that correct RGB color values must be integers in the 0..=255 range.
-
+fn judge_single_color(color:i16)->bool{
+    return (0..=255).contains(&color)
+}
+fn judge_all_color(red:i16,green:i16,blue:i16)->bool{
+    return judge_single_color(red)&&judge_single_color(green)&&judge_single_color(blue)
+}
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
-    type Error = IntoColorError;
+    type Error = IntoColorError;//绑定关联类型 则color::error 是intocolorerror
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let ( num1, num2, num3)=tuple;//则返回值为ok（Color）或err（intocolorerror）
+        if judge_all_color(num1,num2,num3) {
+            Ok(
+                Color {
+                    red:num1 as u8,
+                    green:num2 as u8,
+                    blue:num3 as u8,
+            }
+        )
+    }
+        else{
+            Err(IntoColorError::IntConversion)
+        }
+        
     }
 }
 
@@ -48,6 +67,18 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+          let [num1,num2,num3]=arr;//则返回值为ok（Color）或err（intocolorerror）
+        if judge_all_color(num1,num2,num3) {
+            Ok(
+                Color {
+                    red:num1 as u8,
+                    green:num2 as u8,
+                    blue:num3 as u8,
+            }
+        )
+        }else{
+            Err(IntoColorError::IntConversion)
+        }
     }
 }
 
@@ -55,10 +86,31 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        // if slice.len()!=3 {
+        //     Err(IntoColorError::BadLen)
+        // }else {
+        //     let [num1,num2,num3]=*slice;//则返回值为ok（Color）或err（intocolorerror）
+        let v:[i16;3]=slice.try_into().map_err(|_| IntoColorError::BadLen)?;
+        let [num1,num2,num3]=v;
+        if judge_all_color(num1,num2,num3) {
+            Ok(
+                Color {
+                    red:num1 as u8,
+                    green:num2 as u8,
+                    blue:num3 as u8,
+            }
+        )
+        }
+        else{
+            Err(IntoColorError::IntConversion)
+        }
     }
 }
 
+
 fn main() {
+    // try_from ：从别人身上构造自己（ Target::try_from(src) ）
+    //try_into ：把自己转换成别人（ src.try_into() ）
     // Use the `try_from` function
     let c1 = Color::try_from((183, 65, 14));
     println!("{:?}", c1);

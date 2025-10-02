@@ -12,7 +12,7 @@
 //
 // Execute `rustlings hint cow1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+
 
 use std::borrow::Cow;
 
@@ -22,9 +22,11 @@ fn abs_all<'a, 'b>(input: &'a mut Cow<'b, [i32]>) -> &'a mut Cow<'b, [i32]> {
         if v < 0 {
             // Clones into a vector if not already owned.
             input.to_mut()[i] = -v;
+            // input.to_mut() ：如果  input  是  Borrowed ，则克隆为  Owned ，并返回可变引用。
+//只有在发现负数时才调用  to_mut() ，这体现了 延迟克隆（clone-on-write） 的优化策略。
         }
     }
-    input
+    input//本来是borrowed变体 现在是owned变体
 }
 
 #[cfg(test)]
@@ -49,6 +51,8 @@ mod tests {
         let mut input = Cow::from(&slice[..]);
         match abs_all(&mut input) {
             // TODO
+            Cow::Borrowed(_)=>Ok(()),
+            _=>Err("Expected borrowed value"),
         }
     }
 
@@ -61,6 +65,8 @@ mod tests {
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
             // TODO
+            Cow::Owned(_) => Ok(()),
+            _ => Err("Expected owned value"),
         }
     }
 
@@ -73,6 +79,8 @@ mod tests {
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
             // TODO
+            Cow::Owned(_) => Ok(()),
+            _ => Err("Expected owned value"),
         }
     }
 }

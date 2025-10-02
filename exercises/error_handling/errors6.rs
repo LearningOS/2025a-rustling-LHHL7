@@ -37,7 +37,8 @@ fn parse_pos_nonzero(s: &str) -> Result<PositiveNonzeroInteger, ParsePosNonzeroE
     //map_err  把  Result<T, E>  里的  E  映射成  F 不会直接返回错误
     let x: i64 =s.parse().map_err(ParsePosNonzeroError::from_parseint)?;//对于字符串s: &str ，parse返回值通常就是Result<T, std::num::ParseIntError>
     PositiveNonzeroInteger::new(x).map_err(ParsePosNonzeroError::from_creation)
-    // map_err  需要的参数是一个 函数 
+    // map_err 括号内 需要一个调用对象：函数、闭包等
+    //只要满足这个调用对象接受具体的err值 然后返回类型为 新的错误类型 即可 
     // 本来PositiveNonzeroInteger::new(x)失败的话返回CreationError 成功的话原样保留
     //通过map_err转换成ParsePosNonzeroError
 }

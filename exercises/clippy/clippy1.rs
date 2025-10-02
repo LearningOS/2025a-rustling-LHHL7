@@ -9,12 +9,15 @@
 // Execute `rustlings hint clippy1` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 use std::f32;
-
+//cargo run （或  rustc  直接编译）时，只有 rustc 内置的 lint 会生效
+//lint是编译器发出的警告或者提示
+//Clippy：官方“加强版”lint 集合
+ //cargo clippy  会加载上百条额外规则 来帮助improve代码
 fn main() {
-    let pi = 3.14f32;
+    let pi = f32::consts::PI;//标准库有pi
     let radius = 5.00f32;
 
     let area = pi * f32::powi(radius, 2);

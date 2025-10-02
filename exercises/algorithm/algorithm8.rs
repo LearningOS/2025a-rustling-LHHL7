@@ -2,7 +2,7 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
+
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -23,6 +23,13 @@ impl<T> Queue<T> {
     pub fn dequeue(&mut self) -> Result<T, &str> {
         if !self.elements.is_empty() {
             Ok(self.elements.remove(0usize))
+            //self.elements.remove(0usize)  对  Vec<T>  做了三件事：
+
+            //移除并返回下标为  0  的元素（即队头）。
+ 
+            //后面所有元素整体向前移动一位（ O(n)  时间）。
+ 
+            //向量长度减 1。
         } else {
             Err("Queue is empty")
         }
@@ -55,6 +62,7 @@ impl<T> Default for Queue<T> {
 pub struct myStack<T>
 {
 	//TODO
+    size:u32,
 	q1:Queue<T>,
 	q2:Queue<T>
 }
@@ -62,20 +70,41 @@ impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
 			//TODO
+            size:0,
 			q1:Queue::<T>::new(),
 			q2:Queue::<T>::new()
         }
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+        self.q1.enqueue(elem);
+        self.size+=1;
+
     }
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
-		Err("Stack is empty")
+        if self.is_empty() {
+		return Err("Stack is empty")
+        }
+        for i in 1..self.q1.size() {
+            if let Ok(elem)=self.q1.dequeue() {
+                self.q1.enqueue(elem);
+            }else { }
+        }//前n-1个元素出队再入队 头元素就是要出栈元素
+        self.size-=1;
+        self.q1.dequeue()
+
+        // for i in 0..self.q1.size(){
+        //     if let Ok(elem)=self.q1.dequeue() {
+        //         self.q2.enqueue(elem);
+        //     }else { }
+        // }
+        // self.q2.dequeue()
     }
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+        if self.size==0 { return true}
+        else { return false}
     }
 }
 

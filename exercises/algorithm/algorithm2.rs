@@ -2,7 +2,7 @@
 	double linked list reverse
 	This problem requires you to reverse a doubly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -36,7 +36,7 @@ impl<T> Default for LinkedList<T> {
         Self::new()
     }
 }
-
+use std::mem::swap;
 impl<T> LinkedList<T> {
     pub fn new() -> Self {
         Self {
@@ -72,8 +72,26 @@ impl<T> LinkedList<T> {
             },
         }
     }
+    
 	pub fn reverse(&mut self){
 		// TODO
+        // Option<NonNull<Node<T>>> ，实现了  Copy ，
+        // 按值传递只会复制一份指针，原  self.start  依旧完好。
+        let mut curr=self.start;//则此时不会拿走所有权
+        while curr.is_some() {//当临时指针非空
+            //取出节点
+            //SAFETY:while 保证curr非空
+            let mut tmp_node=unsafe{(curr.unwrap()).as_mut()};//用as_ref或as mut得到引用 直接解引用得到所有权
+            //rust实现自动解引用 用node引用可以访问node的字段
+            let mut next=tmp_node.next;//存后继
+            tmp_node.next=tmp_node.prev;
+            tmp_node.prev=next;//对每个节点的前驱和后继要交换
+            curr=next;//指向下一个节点
+        }
+        let mut tmp=self.start;//修改头尾
+        self.start=self.end;
+        self.end=tmp;
+        
 	}
 }
 

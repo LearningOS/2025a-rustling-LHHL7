@@ -60,7 +60,7 @@ mod my_module {
 #[cfg(test)]
 mod tests {
     // TODO: What do we need to import to have `transformer` in scope?
-    use crate::my_module::transformer;
+    use crate::my_module::transformer;//路径起点是当前模块 此时是crate/test
     use super::Command;
 
     #[test]

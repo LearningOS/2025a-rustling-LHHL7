@@ -2,13 +2,15 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
+//是一个保证非空裸指针的封装
 use std::vec::*;
 
-#[derive(Debug)]
+#[derive(Debug)]//属性宏 
+//让结构体 枚举等直接输出  println!("{:?}", p); // 输出：Point { x: 1, y: 2 }
 struct Node<T> {
     val: T,
     next: Option<NonNull<Node<T>>>,
@@ -30,8 +32,10 @@ struct LinkedList<T> {
 }
 
 impl<T> Default for LinkedList<T> {
-    fn default() -> Self {
-        Self::new()
+    fn default() -> Self {//用类型名调用，参数列表里没有  self 。是关联函数
+        //Default::default()类型调用
+        //若参数列表有self是实例调用  a.default()
+        Self::new()//下方的new
     }
 }
 
@@ -43,40 +47,84 @@ impl<T> LinkedList<T> {
             end: None,
         }
     }
-
-    pub fn add(&mut self, obj: T) {
+    pub fn add(&mut self, obj: T) {//链表尾部加一个为obj值的节点
         let mut node = Box::new(Node::new(obj));
         node.next = None;
         let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(node)) });
+        //先将node变成裸指针  再套一层NonNull且是跳过空指针检查 由于Box永远非空
+        //因为构造box时 空了就panic了
+        //NonNull::new_unchecked本身算unsafe函数 所以要写入unsafe块里
+        //再套一层some  则node_ptr:Option<NonNull<Node<T>>>
         match self.end {
             None => self.start = node_ptr,
             Some(end_ptr) => unsafe { (*end_ptr.as_ptr()).next = node_ptr },
-        }
+        }//end_ptr:NonNull<Node<T>>  as_ptr()也是拿裸指针
+        //*end_ptr.as_ptr():Node<T>
         self.end = node_ptr;
         self.length += 1;
     }
+}
+impl<T: std::cmp::PartialOrd+Copy> LinkedList<T> {
+    
 
-    pub fn get(&mut self, index: i32) -> Option<&T> {
+    pub fn get(&mut self, index: i32) -> Option<&T> {//得到第index个节点的值引用 从0开始
         self.get_ith_node(self.start, index)
     }
 
     fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
-        match node {
-            None => None,
-            Some(next_ptr) => match index {
+        match node {//得到node的往后的第index个节点
+            None => None,//若传入空节点则返回空
+            Some(next_ptr) => match index {//若index为0则返回node的值引用
                 0 => Some(unsafe { &(*next_ptr.as_ptr()).val }),
                 _ => self.get_ith_node(unsafe { (*next_ptr.as_ptr()).next }, index - 1),
+                //不然递归传入node的下一个节点和index-1
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
+        let sum_length=list_a.length+list_b.length;
+        if sum_length==0{//先处理两个链表均空的情况
+            return Self {
             length: 0,
             start: None,
             end: None,
         }
+        }
+        let mut res= LinkedList{
+            length:sum_length,
+            start:None,
+            end:None,
+        };
+        let (mut index_a,mut index_b)=(0,0);
+        while index_a<list_a.length&&index_b<list_b.length {//处理两个链表还未空时
+            let value_a=list_a.get(index_a as i32).unwrap();
+            let value_b=list_b.get(index_b as i32).unwrap();
+            if *value_a <= *value_b {//a链表此时小
+                res.add(*value_a);
+                index_a+=1;
+            }else {//b链表此时小
+                res.add(*value_b);
+                index_b+=1;
+            }
+        }
+        //此时有链表为空了 无法比较了
+		if index_a>=list_a.length {//a空  则把b剩下的加进来
+            while index_b<list_b.length {
+                let value_b=list_b.get(index_b as i32).unwrap();
+                res.add(*value_b);
+                index_b+=1;
+            }
+        }
+        if index_b>=list_b.length {//b空  则把a剩下的加进来
+            while index_a<list_a.length {
+                let value_a=list_a.get(index_a as i32).unwrap();
+                res.add(*value_a);
+                index_a+=1;
+            }
+        }
+        res
 	}
 }
 

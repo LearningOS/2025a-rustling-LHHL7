@@ -11,7 +11,7 @@
 // Execute `rustlings hint iterators5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 use std::collections::HashMap;
 
@@ -35,7 +35,18 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
     // map is a hashmap with String keys and Progress values.
     // map = { "variables1": Complete, "from_str": None, ... }
-    todo!();
+    map.values().filter(|&&x| x==value).count()
+    //values()生成一个值引用的迭代器
+    //fn filter<P>(self, predicate: P) -> Filter<Self, P>     filter的闭包签名
+    //where
+    //  P: FnMut(&Self::Item) -> bool;
+    //Self::Item是迭代器元素类型 即&progress 那么filter接受的形参为&selt：：item
+    //就是&&progress  此时让&&x=&&progress 则x为progress类型
+
+    //filter 方法来获取一个闭包。该闭包从迭代器中获取一项并返回一个 bool。
+    // 如果闭包返回 true，其值将会包含在 filter 提供的新迭代器中。
+    // 如果闭包返回 false，其值不会被包含。
+    //count()消费迭代器 返回迭代器元素个数
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -54,8 +65,11 @@ fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Pr
     // collection is a slice of hashmaps.
     // collection = [{ "variables1": Complete, "from_str": None, ... },
     //     { "variables2": Complete, ... }, ... ]
-    todo!();
-}
+    collection.iter().flat_map(|x| x.values()).filter(|&&x| x==value).count()
+    //flat_map()将迭代器的每个元素映射成一个子迭代器（映射通常由闭包实现 
+    //再将这些子迭代器平铺成一个大迭代器   适用集合的集合
+    //闭包接受一个迭代器
+    }
 
 #[cfg(test)]
 mod tests {

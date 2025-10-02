@@ -10,15 +10,19 @@ fn main() {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
         .as_secs(); // What's the use of this timestamp here?
-    let your_command = format!(
-        "Your command here with {}, please checkout exercises/tests/build.rs",
-        timestamp
-    );
-    println!("cargo:{}", your_command);
+    // let your_command = format!(
+    //     "Your command here with {}, please checkout exercises/tests/build.rs",
+    //     timestamp
+    // );
+    // println!("cargo-{}", your_command);// 这个只是error时给我的提示  与cargo的构建无关系
+    //Cargo 只会把它当成普通 stdout 输出，不会解析、不会设置环境变量、不会做任何构建动作。
+//真正起作用的格式必须是 Cargo 规定的 指令语法
+    println!("cargo:rustc-env=TEST_FOO={}",timestamp);
 
     // In tests8, we should enable "pass" feature to make the
     // testcase return early. Fill in the command to tell
     // Cargo about that.
-    let your_command = "Your command here, please checkout exercises/tests/build.rs";
-    println!("cargo:{}", your_command);
+    // let your_command = "Your command here, please checkout exercises/tests/build.rs";
+    // println!("cargo-{}", your_command);
+    println!("cargo:rustc-cfg=feature=\"pass\"")
 }
